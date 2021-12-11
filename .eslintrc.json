@@ -1,3 +1,37 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
+    "import/prefer-default-export": "off",
+    "no-return-assign": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-indent": "off",
+    "camelcase": "off",
+    "no-use-before-define": "off",
+    "prettier/prettier": "off",
+    "@typescript-eslint/ban-types": "off",
+    "react/prop-types": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "import/no-useless-path-segments": "off",
+    "dot-notation": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "react/jsx-props-no-spreading": "off",
+    "no-param-reassign": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-useless-return": "off",
+    "react/jsx-curly-newline": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
 }
