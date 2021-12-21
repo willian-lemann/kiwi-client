@@ -41,7 +41,7 @@ export const MessageItem = styled.li<MessageItemProps>`
     isCurrentUserSender ? "white" : "#f3f3f3"};
   align-self: ${({ isCurrentUserSender }) =>
     isCurrentUserSender ? "flex-end" : "flex-start"};
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
 `;
 
 export const MessageInputContainer = styled.div`
