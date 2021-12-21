@@ -1,4 +1,6 @@
+import { parseCookies } from "nookies";
 import socketio from "socket.io-client";
-import { baseURL } from "./axios";
 
-export const socket = socketio(baseURL);
+const socketUrl = "http://localhost:3333";
+
+export const socket = socketio(socketUrl);

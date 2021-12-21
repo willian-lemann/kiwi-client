@@ -11,12 +11,7 @@ body {
 
 li{
   list-style: none;
-}
-
-button{
-  outline: none;
-  border: none;
-}
+} 
 
 a {
   color: inherit;
