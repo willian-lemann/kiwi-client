@@ -1,6 +1,6 @@
 import { parseCookies } from "nookies";
 import socketio from "socket.io-client";
 
-const socketUrl = "http://localhost:3333";
+const socketUrl = process.env.API_URL as string;
 
 export const socket = socketio(socketUrl);

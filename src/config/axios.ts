@@ -2,7 +2,7 @@ import { NextPageContext, NextApiRequest } from "next";
 import axios, { HeadersDefaults } from "axios";
 import { parseCookies } from "nookies";
 
-export const baseURL = "http://localhost:3333";
+export const baseURL = process.env.API_URL as string;
 
 export function getAPIClient(context?: any) {
   const { "@kiwi.token": token } = parseCookies(context);
