@@ -1,5 +1,5 @@
+import { ChangeEvent, FormEvent, useState, useRef } from "react";
 import type { GetServerSideProps, NextPage } from "next";
-import { ChangeEvent, FormEvent, useState } from "react";
 import { parseCookies } from "nookies";
 
 import { useAuth } from "../hooks/useAuth";
@@ -13,13 +13,19 @@ import {
   RegisterLabel,
   SubmitButton,
 } from "../styles/home.styles";
+import { ModalHandles, RegisterModal } from "../components/RegisterModal";
 
 const Home: NextPage = () => {
+  const modalRef = useRef<ModalHandles>(null);
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const handleOpenModal = () => {
+    modalRef.current?.openModal();
+  };
 
   function handleChangeData(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -33,8 +39,10 @@ const Home: NextPage = () => {
 
     try {
       await login({ email, password });
-    } catch (error) {
-      alert(error);
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message;
+
+      alert(errorMessage);
     }
   }
 
@@ -59,10 +67,12 @@ const Home: NextPage = () => {
         />
 
         <ActionsContainer>
-          <RegisterLabel>Register</RegisterLabel>
+          <RegisterLabel onClick={handleOpenModal}>Register</RegisterLabel>
           <SubmitButton>Sign</SubmitButton>
         </ActionsContainer>
       </LoginForm>
+
+      <RegisterModal ref={modalRef} />
     </Container>
   );
 };

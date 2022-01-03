@@ -13,6 +13,7 @@ export interface Message {
 
 interface initialState {
   messages: Array<Message>;
+  connectedUsers: Array<string>;
   sendMessage: (message: Message) => void;
   onReceiveMessage: (newMessage: Message) => void;
 }
@@ -21,6 +22,7 @@ export const ChatContext = createContext({} as initialState);
 
 export const ChatProvider: React.FC = ({ children }) => {
   const { user: currentUser } = useAuth();
+  const [connectedUsers, setConnectedUsers] = useState<Array<string>>([]);
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   const sendMessage = useCallback(
@@ -35,21 +37,26 @@ export const ChatProvider: React.FC = ({ children }) => {
 
   const onReceiveMessage = useCallback(
     (newMessage: Message) => {
-      console.log(newMessage);
-
       setMessages([newMessage, ...messages]);
     },
     [messages]
   );
 
-  function onCreateNewChat() {}
+  const onConnectedUser = useCallback(
+    (newUser) => {
+      setConnectedUsers([...connectedUsers, newUser]);
+    },
+    [connectedUsers]
+  );
 
   useEffect(() => {
-    startChat({ onReceiveMessage });
-  }, [onReceiveMessage]);
+    startChat({ onReceiveMessage, onConnectedUser });
+  }, [onReceiveMessage, onConnectedUser]);
 
   return (
-    <ChatContext.Provider value={{ messages, sendMessage, onReceiveMessage }}>
+    <ChatContext.Provider
+      value={{ messages, sendMessage, onReceiveMessage, connectedUsers }}
+    >
       {children}
     </ChatContext.Provider>
   );

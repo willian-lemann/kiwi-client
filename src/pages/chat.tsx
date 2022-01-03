@@ -1,19 +1,33 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { useChat } from "../hooks/useChat";
 
 import {
   Container,
+  LogOut,
+  HeaderLabel,
   MessagesListContainer,
   MessageList,
   MessageInputContainer,
   MessageInput,
   SendMessageButton,
   MessageItem,
+  ChatContainer,
+  ConnectedUsers,
+  Author,
+  ConnectedUser,
 } from "../styles/chat.styles";
 import { parseCookies } from "nookies";
 import { useAuth } from "../hooks/useAuth";
+import Router from "next/router";
 
 interface Message {
   author: string;
@@ -28,53 +42,83 @@ interface ChatProps {
 
 const Chat: NextPage<ChatProps> = () => {
   const [messageText, setMessageText] = useState("");
-  const { user: currentUser } = useAuth();
-  const { messages, sendMessage } = useChat();
+  const { user: currentUser, logout } = useAuth();
+  const { messages, connectedUsers, sendMessage } = useChat();
 
-  function handleSendMessage() {
-    sendMessage({
-      author: currentUser?.id as string,
-      body: messageText,
-      type: "text",
-      date: new Date(),
-    });
+  const handleSendMessage = useCallback(
+    (event: KeyboardEvent) => {
+      const { key } = event;
 
-    setMessageText("");
+      if (!messageText && key === "Enter") return event.preventDefault();
+
+      if (!messageText) return;
+
+      if (!event) {
+        sendMessage({
+          author: currentUser?.name as string,
+          body: messageText,
+          type: "text",
+          date: new Date(),
+        });
+
+        setMessageText("");
+      }
+
+      if (key === "Enter") {
+        event.preventDefault();
+
+        sendMessage({
+          author: currentUser?.name as string,
+          body: messageText,
+          type: "text",
+          date: new Date(),
+        });
+
+        setMessageText("");
+      }
+    },
+    [currentUser?.name, messageText, sendMessage]
+  );
+
+  function handleLogout() {
+    logout();
+
+    Router.push("/");
   }
 
   return (
     <Container>
-      <MessagesListContainer>
-        <MessageList>
-          {messages.map((message) => {
-            const isCurrentUserSender = message.author === currentUser?.id;
+      <LogOut onClick={handleLogout}>Log out</LogOut>
+      <HeaderLabel>Chat with your friends, free and randomly</HeaderLabel>
+      <ChatContainer>
+        <ConnectedUsers>
+          {connectedUsers.map((connectedUser) => (
+            <ConnectedUser key={connectedUser}>{connectedUser}</ConnectedUser>
+          ))}
+        </ConnectedUsers>
 
-            return (
-              <MessageItem
-                key={Math.random()}
-                isCurrentUserSender={isCurrentUserSender}
-              >
-                {message.body}
+        <MessagesListContainer>
+          <MessageList>
+            {messages.map((message) => (
+              <MessageItem key={Math.random()}>
+                <Author>{message.author}:</Author> {message.body}
               </MessageItem>
-            );
-          })}
-        </MessageList>
+            ))}
+          </MessageList>
 
-        <MessageInputContainer>
-          <MessageInput
-            className="chat-input"
-            placeholder="Type here..."
-            value={messageText}
-            onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) =>
-              setMessageText(target.value)
-            }
-          />
-
-          <SendMessageButton onClick={handleSendMessage}>
-            Send Message
-          </SendMessageButton>
-        </MessageInputContainer>
-      </MessagesListContainer>
+          <MessageInputContainer>
+            <MessageInput
+              className="chat-input"
+              placeholder="Type here and ENTER to send message..."
+              value={messageText}
+              onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) =>
+                setMessageText(target.value)
+              }
+              onKeyDown={(event: KeyboardEvent) => handleSendMessage(event)}
+            />
+          </MessageInputContainer>
+        </MessagesListContainer>
+      </ChatContainer>
     </Container>
   );
 };

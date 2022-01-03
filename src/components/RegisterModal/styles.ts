@@ -1,27 +1,46 @@
 import styled from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
 
-export const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #121315;
-`;
+import { MdClose } from "react-icons/md";
 
-export const HeaderLabel = styled.h1`
-  color: white;
-  font-size: 3rem;
-`;
+export const OverlayContainer = styled(AnimatePresence)``;
 
-export const LoginForm = styled.form`
-  width: 500px;
+export const Container = styled(motion.div)`
+  background-color: white;
   height: 500px;
+  width: 500px;
+  border-radius: 3px;
+  opacity: 1;
+  position: absolute;
+`;
+
+export const Content = styled.div`
+  padding: 1rem 3rem;
+  height: 100%;
+`;
+
+export const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const HeaderLabel = styled.span`
+  font-size: 20px;
+  font-weight: 500;
+  font-family: Roboto;
+`;
+
+export const CloseIcon = styled(MdClose)`
+  right: 40px;
+  top: 17px;
+  cursor: pointer;
+`;
+
+export const FormContainer = styled.form`
+  margin-top: 6rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 `;
 
 export const Input = styled.input`
@@ -44,15 +63,8 @@ export const ActionsContainer = styled.div`
 `;
 
 export const RegisterLabel = styled.span`
-  color: white;
-  padding: 0.5rem 3rem;
-  border-radius: 3px;
   cursor: pointer;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: #444;
-  }
+  margin-left: 2rem;
 `;
 
 export const SubmitButton = styled.button`
@@ -64,10 +76,4 @@ export const SubmitButton = styled.button`
   border: none;
   align-self: flex-end;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background-color: #444;
-    color: white;
-  }
 `;

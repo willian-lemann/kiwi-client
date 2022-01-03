@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { setCookie, parseCookies } from "nookies";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
 
 import {
   loginRequest,
@@ -7,13 +7,16 @@ import {
   getUserProfileRequest,
 } from "../services/auth";
 import Router from "next/router";
+import { socket } from "../config/socket";
 
 interface LoginData {
   email: string;
   password: string;
 }
 
-interface RegisterData extends LoginData {}
+interface RegisterData extends LoginData {
+  name: string;
+}
 
 interface User {
   id: string;
@@ -23,10 +26,11 @@ interface User {
 }
 
 interface initialState {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean; 
   user: User | null;
   login: (login: LoginData) => Promise<void>;
   register: (register: RegisterData) => Promise<void>;
+  logout: () => void;
 }
 
 export const AuthContext = createContext({} as initialState);
@@ -48,9 +52,28 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUser(user);
 
     Router.push("/chat");
+
+    socket.emit("connectedUser", user.name);
   }
 
-  async function register({ email, password }: RegisterData) {}
+  async function register({ email, name, password }: RegisterData) {
+    const { data } = await registerRequest({ email, name, password });
+
+    const { token, ...newUser } = data;
+
+    setCookie(undefined, "@kiwi.token", token, {
+      maxAge: 60 * 60 * 1, // 1hour,
+    });
+
+    setUser(newUser);
+
+    Router.push("/chat");
+  }
+
+  async function logout() {
+    destroyCookie(undefined, "@kiwi.token");
+    setUser(null);
+  }
 
   useEffect(() => {
     const { "@kiwi.token": token } = parseCookies();
@@ -67,6 +90,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         user,
         login,
         register,
+        logout,
       }}
     >
       {children}

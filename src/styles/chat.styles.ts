@@ -3,11 +3,49 @@ import styled from "styled-components";
 export const Container = styled.div`
   height: 100vh;
   background-color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
-export const MessagesListContainer = styled.div`
+export const LogOut = styled.a`
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  background-color: transparent;
+  padding: 0.5rem 0.5rem;
+  border-radius: 3px;
+  transition: background 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #444;
+    color: white;
+  }
+`;
+
+export const HeaderLabel = styled.span`
   margin: 0 auto;
-  height: 100%;
+  font-size: 24px;
+  margin-bottom: 3rem;
+`;
+
+export const ChatContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+export const ConnectedUsers = styled.ul`
+  background-color: #999;
+  padding: 0rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ConnectedUser = styled.li``;
+
+export const MessagesListContainer = styled.div`
+  height: 600px;
   width: 800px;
   background-color: white;
   display: flex;
@@ -25,24 +63,21 @@ export const MessagesListContainer = styled.div`
 
 export const MessageList = styled.ul`
   padding: 1rem 1rem;
+  overflow: auto;
   height: 100%;
   display: flex;
   flex-direction: column-reverse;
 `;
 
-interface MessageItemProps {
-  isCurrentUserSender: boolean;
-}
-
-export const MessageItem = styled.li<MessageItemProps>`
+export const MessageItem = styled.li`
   width: fit-content;
   padding: 0.5rem 1rem;
-  background-color: ${({ isCurrentUserSender }) =>
-    isCurrentUserSender ? "white" : "#f3f3f3"};
-  align-self: ${({ isCurrentUserSender }) =>
-    isCurrentUserSender ? "flex-end" : "flex-start"};
+  background-color: #f3f3f3;
+  align-self: flex-start;
   margin-bottom: 1.1rem;
 `;
+
+export const Author = styled.strong``;
 
 export const MessageInputContainer = styled.div`
   padding: 1rem;

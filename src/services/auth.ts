@@ -13,7 +13,9 @@ interface LoginResponseData {
   token: string;
 }
 
-interface RegisterRequestData extends LoginRequestData {}
+interface RegisterRequestData extends LoginRequestData {
+  name: string;
+}
 
 export const loginRequest = async (loginRequestData: LoginRequestData) => {
   const response = await api.post<LoginResponseData>(
