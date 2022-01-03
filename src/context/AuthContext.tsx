@@ -26,7 +26,7 @@ interface User {
 }
 
 interface initialState {
-  isAuthenticated: boolean; 
+  isAuthenticated: boolean;
   user: User | null;
   login: (login: LoginData) => Promise<void>;
   register: (register: RegisterData) => Promise<void>;
@@ -59,15 +59,17 @@ export const AuthProvider: React.FC = ({ children }) => {
   async function register({ email, name, password }: RegisterData) {
     const { data } = await registerRequest({ email, name, password });
 
-    const { token, ...newUser } = data;
+    const { token, ...user } = data;
 
     setCookie(undefined, "@kiwi.token", token, {
       maxAge: 60 * 60 * 1, // 1hour,
     });
 
-    setUser(newUser);
+    setUser(user);
 
     Router.push("/chat");
+
+    socket.emit("connectedUser", user.name);
   }
 
   async function logout() {
